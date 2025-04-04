@@ -1,5 +1,6 @@
+import { AddEventForm } from "@/components/AddEventForm";
 import { Button } from "@/components/ui/button";
-import { SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Image from "next/image";
 
 export default function Home() {
@@ -26,6 +27,9 @@ export default function Home() {
             <Button className="cursor-pointer">Sign Up</Button>
           </SignUpButton>
         </SignedOut>
+        <SignedIn>
+          <AddEventForm />
+        </SignedIn>
       </div>
     </main>
   );
