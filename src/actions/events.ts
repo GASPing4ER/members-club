@@ -44,7 +44,6 @@ export async function addEvent(
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const startTime = formData.get("startTime") as string;
-  const endTime = formData.get("endTime") as string;
 
   // Validate required fields
   if (!title || !startTime) {
@@ -60,7 +59,6 @@ export async function addEvent(
         title,
         description,
         start_time: startTime,
-        end_time: endTime || null,
       })
       .select()
       .single();
@@ -70,7 +68,7 @@ export async function addEvent(
     }
 
     // Revalidate any paths that display events
-    revalidatePath("/events");
+    revalidatePath("/dashboard/events");
     revalidatePath("/dashboard");
 
     return { success: true, event: data };

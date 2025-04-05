@@ -12,7 +12,7 @@ import Image from "next/image";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
-type UserData = {
+export type UserData = {
   id: string;
   firstName: string | null;
   lastName: string | null;

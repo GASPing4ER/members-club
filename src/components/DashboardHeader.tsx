@@ -3,14 +3,17 @@ import { navItems } from "@/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Button } from "./ui/button";
+import { useState } from "react";
+import { AddEventDialog } from "@/components";
 
 const DashboardHeader = () => {
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full h-20 flex justify-center items-center gap-8 border-b bg-white z-50">
-      <div className="flex items-center gap-8">
-        {/* Left side navigation */}
+    <>
+      <header className="fixed top-0 left-0 w-full h-20 flex justify-center items-center gap-8 border-b bg-white z-50">
         <ul className="flex gap-8">
           {navItems.slice(0, 2).map((item) => (
             <li key={item.path}>
@@ -56,8 +59,12 @@ const DashboardHeader = () => {
             </li>
           ))}
         </ul>
-      </div>
-    </header>
+        <Button onClick={() => setIsOpen(true)} className="absolute right-10">
+          Create Event
+        </Button>
+      </header>
+      <AddEventDialog isOpen={isOpen} setIsOpen={setIsOpen} />
+    </>
   );
 };
 

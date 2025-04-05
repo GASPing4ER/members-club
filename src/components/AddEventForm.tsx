@@ -1,28 +1,57 @@
-// app/components/AddEventForm.tsx
 "use client";
 
 import { useFormStatus } from "react-dom";
 import { ActionState, addEvent } from "@/actions/events";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "./ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { toast } from "sonner";
 
 const initialState: ActionState = {
   success: undefined,
   error: undefined,
 };
 
-export function AddEventForm() {
+type AddEventFormProps = {
+  onSuccess: () => void;
+};
+
+function AddEventForm({ onSuccess }: AddEventFormProps) {
   const [state, formAction] = useActionState<ActionState, FormData>(
-    addEvent,
+    async (prevState: ActionState, formData: FormData) => {
+      const result = await addEvent(prevState, formData);
+      if (result.success && onSuccess) {
+        onSuccess();
+        toast.success("Successfully added a new event.");
+      }
+      return result;
+    },
     initialState
   );
+  const [date, setDate] = useState<Date | undefined>(undefined);
 
   return (
     <form action={formAction} className="space-y-4">
+      {/* Hidden input to submit the date value */}
+      <input
+        type="hidden"
+        name="startTime"
+        id="startTime"
+        value={date ? date.toISOString() : ""}
+      />
+
       <div>
-        <label htmlFor="title" className="block mb-2 font-medium">
+        <Label htmlFor="title" className="block mb-2 font-medium">
           Event Title
-        </label>
-        <input
+        </Label>
+        <Input
           type="text"
           id="title"
           name="title"
@@ -32,10 +61,10 @@ export function AddEventForm() {
       </div>
 
       <div>
-        <label htmlFor="description" className="block mb-2 font-medium">
+        <Label htmlFor="description" className="block mb-2 font-medium">
           Description
-        </label>
-        <textarea
+        </Label>
+        <Textarea
           id="description"
           name="description"
           className="w-full p-2 border rounded"
@@ -43,28 +72,37 @@ export function AddEventForm() {
       </div>
 
       <div>
-        <label htmlFor="startTime" className="block mb-2 font-medium">
-          Start Time*
-        </label>
-        <input
-          type="datetime-local"
-          id="startTime"
-          name="startTime"
-          required
-          className="w-full p-2 border rounded"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="endTime" className="block mb-2 font-medium">
-          End Time (optional)
-        </label>
-        <input
-          type="datetime-local"
-          id="endTime"
-          name="endTime"
-          className="w-full p-2 border rounded"
-        />
+        <Label className="block mb-2 font-medium">Event Date</Label>
+        <Popover modal={true}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-full pl-3 text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              {date ? (
+                format(date, "PPP") // Formats date as "Month day, year"
+              ) : (
+                <span>Choose date</span>
+              )}
+              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto p-0"
+            align="start"
+            onOpenAutoFocus={(e) => e.preventDefault()}
+          >
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <SubmitButton />
@@ -85,13 +123,10 @@ function SubmitButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400"
-      aria-disabled={pending}
-    >
+    <Button type="submit" disabled={pending} aria-disabled={pending}>
       {pending ? "Adding Event..." : "Add Event"}
-    </button>
+    </Button>
   );
 }
+
+export default AddEventForm;
