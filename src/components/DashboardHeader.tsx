@@ -47,7 +47,7 @@ const DashboardHeader = () => {
                 href={item.path}
                 className={`relative py-1 px-2 transition-all duration-300 ${
                   pathname === item.path
-                    ? "font-bold text-[#D5BDA4]"
+                    ? "text-[#D5BDA4]"
                     : "hover:text-[#D5BDA4]"
                 }`}
               >
