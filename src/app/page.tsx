@@ -35,14 +35,16 @@ export default function Home() {
         </SignedOut>
         <SignedIn>
           <div className="flex items-center gap-6">
-            <SignOutButton>
-              <Button className="cursor-pointer">Sign Out</Button>
-            </SignOutButton>
-            <Button variant="outline">
+            <Button>
               <Link href="/dashboard" className="cursor-pointer">
                 Go to App
               </Link>
             </Button>
+            <SignOutButton>
+              <Button variant="outline" className="cursor-pointer">
+                Sign Out
+              </Button>
+            </SignOutButton>
           </div>
         </SignedIn>
       </div>
