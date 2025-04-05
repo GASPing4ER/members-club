@@ -1,7 +1,13 @@
-import { AddEventForm } from "@/components/AddEventForm";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignOutButton,
+  SignUpButton,
+} from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -28,7 +34,16 @@ export default function Home() {
           </SignUpButton>
         </SignedOut>
         <SignedIn>
-          <AddEventForm />
+          <div className="flex items-center gap-6">
+            <SignOutButton>
+              <Button className="cursor-pointer">Sign Out</Button>
+            </SignOutButton>
+            <Button variant="outline">
+              <Link href="/dashboard" className="cursor-pointer">
+                Go to App
+              </Link>
+            </Button>
+          </div>
         </SignedIn>
       </div>
     </main>
