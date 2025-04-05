@@ -3,6 +3,7 @@
 
 import { clerkClient } from "@/lib/clerk";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function updateProfile(formData: FormData) {
   try {
@@ -20,6 +21,8 @@ export async function updateProfile(formData: FormData) {
     };
 
     await clerkClient.users.updateUser(userId, updatedData);
+
+    revalidatePath("/dashboard");
 
     return { success: true, message: "Profile updated successfully" };
   } catch (error) {
