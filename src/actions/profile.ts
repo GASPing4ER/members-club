@@ -6,10 +6,10 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
 export async function updateProfile(formData: FormData) {
-  try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
 
+  try {
     const updatedData = {
       firstName: formData.get("firstName") as string,
       lastName: formData.get("lastName") as string,
@@ -20,13 +20,16 @@ export async function updateProfile(formData: FormData) {
       },
     };
 
-    await clerkClient.users.updateUser(userId, updatedData);
+    const updatedUser = await clerkClient.users.updateUser(userId, updatedData);
 
-    revalidatePath("/dashboard");
+    revalidatePath("/profile");
 
-    return { success: true, message: "Profile updated successfully" };
+    return {
+      success: true,
+      message: "Profile updated successfully",
+      imageUrl: updatedUser.imageUrl,
+    };
   } catch (error) {
-    console.error("Profile update error:", error);
     return {
       success: false,
       message:
