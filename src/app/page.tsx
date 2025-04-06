@@ -36,7 +36,7 @@ export default function Home() {
         <SignedIn>
           <div className="flex items-center gap-6">
             <Button>
-              <Link href="/dashboard" className="cursor-pointer">
+              <Link href="/dashboard/events" className="cursor-pointer">
                 Go to App
               </Link>
             </Button>
