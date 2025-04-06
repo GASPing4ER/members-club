@@ -16,6 +16,13 @@ type Event = {
   updated_at: string;
 };
 
+type EventParticipant = {
+  id: string;
+  event_id: string;
+  user_id: string;
+  created_at: string;
+};
+
 export type ActionState = {
   success?: boolean;
   event?: Event;
@@ -68,8 +75,50 @@ export async function addEvent(
     }
 
     // Revalidate any paths that display events
-    revalidatePath("/dashboard/events");
-    revalidatePath("/dashboard");
+    revalidatePath("/events");
+
+    return { success: true, event: data };
+  } catch (error) {
+    console.error("Error adding event:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to add event",
+    };
+  }
+}
+
+export async function rsvpEvent(
+  eventId: string,
+  userId: string
+): Promise<
+  { success: true; event: EventParticipant } | { success: false; error: string }
+> {
+  // Get authenticated user from Clerk
+
+  if (!userId) {
+    return { success: false, error: "You must be signed in to add an event" };
+  }
+
+  // Create Supabase client
+  const supabase = await createSupabaseServerClient();
+
+  try {
+    // Insert the new event
+    const { data, error } = await supabase
+      .from("event_participants")
+      .insert({
+        event_id: eventId,
+        user_id: userId,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    // Revalidate any paths that display events
+    revalidatePath("/events");
 
     return { success: true, event: data };
   } catch (error) {

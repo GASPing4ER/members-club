@@ -1,4 +1,3 @@
-// app/dashboard/page.tsx
 import { ProfileForm } from "@/components";
 import { currentUser } from "@clerk/nextjs/server";
 import React from "react";
@@ -6,7 +5,6 @@ import React from "react";
 const DashboardPage = async () => {
   const user = await currentUser();
 
-  // Create a serializable user object
   const serializableUser = user
     ? {
         id: user.id,

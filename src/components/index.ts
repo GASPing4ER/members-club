@@ -4,6 +4,7 @@ import MemberCard from "./MemberCard";
 import AddEventDialog from "./AddEventDialog";
 import AddEventForm from "./AddEventForm";
 import EventCard from "./EventCard";
+import RSVPButton from "./RSVPButton";
 
 export {
   DashboardHeader,
@@ -12,4 +13,5 @@ export {
   AddEventDialog,
   AddEventForm,
   EventCard,
+  RSVPButton,
 };

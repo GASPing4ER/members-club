@@ -6,7 +6,7 @@ import Link from "next/link";
 const MemberCard = ({ member }: { member: UserData }) => {
   return (
     <Link
-      href={`/dashboard/members/${member.id}`}
+      href={`/members/${member.id}`}
       className="group relative flex flex-col items-center rounded-xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:-translate-y-1"
     >
       {/* Image with hover effect */}

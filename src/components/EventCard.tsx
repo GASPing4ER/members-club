@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
-import { EventProps } from "@/app/dashboard/events/page";
+import { EventProps } from "@/app/(app)/events/page";
 
 const EventCard = ({ event }: { event: EventProps }) => {
   // Parse and format the timestamp
@@ -11,8 +11,8 @@ const EventCard = ({ event }: { event: EventProps }) => {
 
   return (
     <Link
-      href={`/dashboard/events/${event.id}`}
-      className="group relative flex flex-col items-center rounded-xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:-translate-y-1"
+      href={`/events/${event.id}`}
+      className="relative flex flex-col items-center rounded-xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:-translate-y-1"
     >
       {/* Image with hover effect */}
       <div className="relative mb-4 h-32 w-32 overflow-hidden rounded-full border-4 border-white shadow-md">
@@ -20,7 +20,7 @@ const EventCard = ({ event }: { event: EventProps }) => {
           src="/logo.svg"
           alt={`logo`}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover"
           sizes="(max-width: 768px) 128px, (max-width: 1200px) 150px, 192px"
         />
       </div>
