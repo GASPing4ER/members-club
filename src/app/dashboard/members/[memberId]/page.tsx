@@ -36,6 +36,9 @@ const MemberPage = async ({
             {member.publicMetadata.company}
           </p>
         )}
+        {member.publicMetadata.bio && (
+          <p className="text-gray-600 mt-4">{member.publicMetadata.bio}</p>
+        )}
       </div>
     </div>
   );

@@ -35,9 +35,9 @@ const DashboardHeader = () => {
         </ul>
 
         {/* Logo - centered */}
-        <div className="mx-4">
+        <Link href="/" className="mx-4">
           <Image src="/logo.svg" alt="logo" width={80} height={50} />
-        </div>
+        </Link>
 
         {/* Right side navigation */}
         <ul className="flex gap-8">
