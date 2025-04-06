@@ -30,3 +30,28 @@ export const getEvents = async (): Promise<{
     throw new Error(error as string);
   }
 };
+
+export const getEvent = async (
+  eventId: string
+): Promise<{
+  data: EventProps | null;
+  error: PostgrestError | null;
+  message: string;
+}> => {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("events")
+      .select()
+      .eq("id", eventId)
+      .maybeSingle();
+
+    return {
+      data,
+      error,
+      message: "Successfully fetched events",
+    };
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
