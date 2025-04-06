@@ -43,6 +43,8 @@ function AddEventForm({ onSuccess }: AddEventFormProps) {
     ampm: "PM",
   });
 
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+
   const handleTimeChange = (
     type: "hour" | "minute" | "ampm",
     value: string | number
@@ -104,10 +106,11 @@ function AddEventForm({ onSuccess }: AddEventFormProps) {
       <div className="space-y-2">
         <Label className="block font-medium">Event Date & Time</Label>
         <div className="flex flex-col gap-4">
-          <Popover>
+          <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
             <PopoverTrigger asChild>
               <Button
                 variant={"outline"}
+                onClick={() => setIsCalendarOpen(true)}
                 className={cn(
                   "w-full pl-3 text-left font-normal",
                   !date && "text-muted-foreground"
