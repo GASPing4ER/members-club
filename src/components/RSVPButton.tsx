@@ -6,7 +6,6 @@ import { Button } from "./ui/button";
 type RSVPButtonProps = {
   eventId: string;
   userId: string;
-  rsvp: boolean;
 };
 
 const RSVPButton = ({ eventId, userId }: RSVPButtonProps) => {
