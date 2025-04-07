@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { WebhookEvent } from "@clerk/backend";
+import { addUser } from "@/actions/users";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -44,21 +45,21 @@ export async function POST(req: Request) {
   try {
     switch (eventType) {
       case "user.created":
-      // case "user.updated":
-      //   const user = evt.data;
-      //   await supabase.from("users").upsert({
-      //     id: user.id,
-      //     email: user.email_addresses?.[0]?.email_address,
-      //     first_name: user.first_name,
-      //     last_name: user.last_name,
-      //     metadata: user.public_metadata,
-      //     updated_at: new Date().toISOString(),
-      //   });
-      //   break;
+        const user = evt.data;
+        await addUser({
+          id: user.id,
+          email: user.email_addresses?.[0]?.email_address,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          company: user.public_metadata.company as string,
+          industry: user.public_metadata.industry as string,
+          bio: user.public_metadata.bio as string,
+          image_url: user.image_url,
+        });
+        break;
+      case "user.updated":
 
-      // case "user.deleted":
-      //   await supabase.from("users").delete().eq("id", evt.data.id);
-      //   break;
+      case "user.deleted":
     }
 
     return new NextResponse("Webhook processed successfully", { status: 200 });
