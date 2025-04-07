@@ -113,6 +113,11 @@ export async function rsvpEvent(
       .select()
       .single();
 
+    if (error?.code === "23505") {
+      // Unique violation error code
+      return { success: false, error: "You've already RSVP'd to this event" };
+    }
+
     if (error) {
       throw error;
     }
