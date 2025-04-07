@@ -42,10 +42,12 @@ export async function POST(req: Request) {
 
   const eventType = evt.type;
 
+  let user;
+
   try {
     switch (eventType) {
       case "user.created":
-        let user = evt.data;
+        user = evt.data;
         await addUser({
           id: user.id,
           email: user.email_addresses?.[0]?.email_address,
