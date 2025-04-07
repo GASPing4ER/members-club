@@ -1,18 +1,17 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
+import { createSupabaseServerClient } from "@/lib/supabase";
+import { WebhookEvent } from "@clerk/backend";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
 
   if (!SIGNING_SECRET) {
     throw new Error(
-      "Error: Please add SIGNING_SECRET from Clerk Dashboard to .env or .env"
+      "Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env"
     );
   }
-
-  // Create new Svix instance with secret
-  const wh = new Webhook(SIGNING_SECRET);
 
   // Get headers
   const headerPayload = await headers();
@@ -20,18 +19,16 @@ export async function POST(req: Request) {
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response("Error: Missing Svix headers", {
-      status: 400,
-    });
+    return new NextResponse("Error: Missing Svix headers", { status: 400 });
   }
-  // Get body
+
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
+  const wh = new Webhook(SIGNING_SECRET);
   let evt: WebhookEvent;
-  // Verify payload with headers
+
   try {
     evt = wh.verify(body, {
       "svix-id": svix_id,
@@ -39,18 +36,36 @@ export async function POST(req: Request) {
       "svix-signature": svix_signature,
     }) as WebhookEvent;
   } catch (err) {
-    console.error("Error: Could not verify webhook:", err);
-    return new Response("Error: Verification error", {
-      status: 400,
-    });
+    console.error("Error verifying webhook:", err);
+    return new NextResponse("Error: Verification error", { status: 400 });
   }
 
-  // Do something with payload
-  // For this guide, log payload to console
-  const { id } = evt.data;
   const eventType = evt.type;
-  console.log(`Received webhook with ID ${id} and event type of ${eventType}`);
-  console.log("Webhook payload:", body);
+  const supabase = await createSupabaseServerClient();
 
-  return new Response("Webhook received", { status: 200 });
+  try {
+    switch (eventType) {
+      case "user.created":
+      case "user.updated":
+        const user = evt.data;
+        await supabase.from("users").upsert({
+          id: user.id,
+          email: user.email_addresses?.[0]?.email_address,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          metadata: user.public_metadata,
+          updated_at: new Date().toISOString(),
+        });
+        break;
+
+      case "user.deleted":
+        await supabase.from("users").delete().eq("id", evt.data.id);
+        break;
+    }
+
+    return new NextResponse("Webhook processed successfully", { status: 200 });
+  } catch (error) {
+    console.error("Error processing webhook:", error);
+    return new NextResponse("Error processing webhook", { status: 500 });
+  }
 }
