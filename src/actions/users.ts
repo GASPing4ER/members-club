@@ -38,3 +38,30 @@ export const addUser = async (
     throw new Error(error as string);
   }
 };
+
+export const updateUser = async (
+  newUser: UserProps
+): Promise<{
+  data: UserProps | null;
+  error: PostgrestError | null;
+  message: string;
+}> => {
+  try {
+    const { data, error } = await supabaseClient
+      .from("users")
+      .update({ ...newUser })
+      .eq("id", newUser.id);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      data,
+      error,
+      message: "Successfully added a new user.",
+    };
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};

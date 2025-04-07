@@ -2,7 +2,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { WebhookEvent } from "@clerk/backend";
-import { addUser } from "@/actions/users";
+import { addUser, updateUser } from "@/actions/users";
 
 export async function POST(req: Request) {
   const SIGNING_SECRET = process.env.SIGNING_SECRET;
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   try {
     switch (eventType) {
       case "user.created":
-        const user = evt.data;
+        let user = evt.data;
         await addUser({
           id: user.id,
           email: user.email_addresses?.[0]?.email_address,
@@ -58,7 +58,18 @@ export async function POST(req: Request) {
         });
         break;
       case "user.updated":
-
+        user = evt.data;
+        await updateUser({
+          id: user.id,
+          email: user.email_addresses?.[0]?.email_address,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          company: user.public_metadata.company as string,
+          industry: user.public_metadata.industry as string,
+          bio: user.public_metadata.bio as string,
+          image_url: user.image_url,
+        });
+        break;
       case "user.deleted":
     }
 
