@@ -1,7 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase";
 import { WebhookEvent } from "@clerk/backend";
 
 export async function POST(req: Request) {
@@ -41,26 +40,25 @@ export async function POST(req: Request) {
   }
 
   const eventType = evt.type;
-  const supabase = await createSupabaseServerClient();
 
   try {
     switch (eventType) {
       case "user.created":
-      case "user.updated":
-        const user = evt.data;
-        await supabase.from("users").upsert({
-          id: user.id,
-          email: user.email_addresses?.[0]?.email_address,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          metadata: user.public_metadata,
-          updated_at: new Date().toISOString(),
-        });
-        break;
+      // case "user.updated":
+      //   const user = evt.data;
+      //   await supabase.from("users").upsert({
+      //     id: user.id,
+      //     email: user.email_addresses?.[0]?.email_address,
+      //     first_name: user.first_name,
+      //     last_name: user.last_name,
+      //     metadata: user.public_metadata,
+      //     updated_at: new Date().toISOString(),
+      //   });
+      //   break;
 
-      case "user.deleted":
-        await supabase.from("users").delete().eq("id", evt.data.id);
-        break;
+      // case "user.deleted":
+      //   await supabase.from("users").delete().eq("id", evt.data.id);
+      //   break;
     }
 
     return new NextResponse("Webhook processed successfully", { status: 200 });
