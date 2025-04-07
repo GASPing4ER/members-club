@@ -3,6 +3,7 @@ import { CalendarIcon, UserIcon } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { MobileSidebar } from "@/components"; // We'll create this component
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -15,11 +16,41 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const user = await currentUser();
+  const serializableUser = user
+    ? {
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        imageUrl: user.imageUrl,
+        emailAddress: user.emailAddresses[0]?.emailAddress,
+        publicMetadata: user.publicMetadata,
+      }
+    : null;
 
   return (
-    <div className={`flex h-[calc(100vh-5rem)]`}>
-      <aside className="w-64 border-r bg-gray-50 p-4">
-        <div className="flex items-center gap-3 p-2">
+    <div className="flex flex-col md:flex-row h-[calc(100vh-5rem)]">
+      {/* Mobile Header with Hamburger Menu */}
+      <header className="md:hidden flex items-center justify-between p-4 border-b bg-gray-50">
+        <div className="flex items-center gap-3">
+          {user?.imageUrl && (
+            <Image
+              src={user.imageUrl}
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+          )}
+          <span className="font-medium">
+            {user?.firstName} {user?.lastName}
+          </span>
+        </div>
+        <MobileSidebar user={serializableUser} />
+      </header>
+
+      {/* Desktop Sidebar (hidden on mobile) */}
+      <aside className="hidden md:block w-64 border-r bg-gray-50 p-4">
+        <div className="flex items-center gap-3 p-2 mb-4">
           {user?.imageUrl && (
             <Image
               src={user.imageUrl}
@@ -56,7 +87,7 @@ export default async function DashboardLayout({
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 p-8">{children}</main>
+      <main className="flex-1 p-4 md:p-8 overflow-auto">{children}</main>
     </div>
   );
 }
