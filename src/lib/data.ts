@@ -31,6 +31,80 @@ export const getEvents = async (): Promise<{
   }
 };
 
+export const getParticipatingEvents = async (
+  userId: string
+): Promise<{
+  data: EventProps[] | null;
+  error: PostgrestError | null;
+  message: string;
+}> => {
+  try {
+    const supabase = await createSupabaseServerClient();
+
+    const { data, error } = await supabase
+      .from("event_participants")
+      .select(
+        `
+        events:event_id (*)
+      `
+      )
+      .eq("user_id", userId);
+
+    if (error) {
+      return {
+        data: null,
+        error,
+        message: "Failed to fetch participating events",
+      };
+    }
+
+    // Extract and flatten the event data from the join results
+    const eventsData =
+      (data
+        ?.map((item) => item.events)
+        .filter(Boolean) as unknown as EventProps[]) || [];
+
+    return {
+      data: eventsData,
+      error: null,
+      message: eventsData.length
+        ? "Successfully fetched participating events"
+        : "No participating events found",
+    };
+  } catch (error) {
+    console.error("Error fetching participating events:", error);
+    return {
+      data: null,
+      error: error as PostgrestError,
+      message: "Error fetching participating events",
+    };
+  }
+};
+
+export const getCreatedEvents = async (
+  userId: string
+): Promise<{
+  data: EventProps[] | null;
+  error: PostgrestError | null;
+  message: string;
+}> => {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("events")
+      .select()
+      .eq("user_id", userId);
+
+    return {
+      data,
+      error,
+      message: "Successfully fetched events",
+    };
+  } catch (error) {
+    throw new Error(error as string);
+  }
+};
+
 export const getEvent = async (
   eventId: string
 ): Promise<{
