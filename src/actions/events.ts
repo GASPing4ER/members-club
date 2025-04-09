@@ -11,6 +11,7 @@ type Event = {
   title: string;
   description: string | null;
   start_time: string;
+  location: string;
   end_time: string | null;
   created_at: string;
   updated_at: string;
@@ -51,6 +52,7 @@ export async function addEvent(
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const startTime = formData.get("startTime") as string;
+  const location = formData.get("location") as string;
 
   // Validate required fields
   if (!title || !startTime) {
@@ -66,6 +68,7 @@ export async function addEvent(
         title,
         description,
         start_time: startTime,
+        location,
       })
       .select()
       .single();

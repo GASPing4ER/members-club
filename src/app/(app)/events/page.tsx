@@ -6,6 +6,7 @@ import { getEvents } from "@/lib/data";
 export type EventProps = {
   id: string;
   title: string;
+  location: string;
   description: string;
   start_time: string;
   created_at: string;
@@ -27,5 +28,4 @@ const EventsPage = async () => {
     </main>
   );
 };
-
 export default EventsPage;

@@ -91,6 +91,19 @@ function AddEventForm({ onSuccess }: AddEventFormProps) {
       </div>
 
       <div>
+        <Label htmlFor="location" className="block mb-2 font-medium">
+          Location
+        </Label>
+        <Input
+          type="text"
+          id="location"
+          name="location"
+          required
+          className="w-full p-2 border rounded"
+        />
+      </div>
+
+      <div>
         <Label htmlFor="description" className="block mb-2 font-medium">
           Description
         </Label>
