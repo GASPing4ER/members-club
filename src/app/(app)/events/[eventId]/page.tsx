@@ -44,6 +44,7 @@ const EventPage = async ({
         <h3 className="text-lg font-semibold text-gray-900">{event.title}</h3>
         <p className="text-sm text-gray-600">{event.description}</p>
         <p className="text-xs text-gray-500 mt-1">{formattedDate}</p>
+        <p className="text-xs text-gray-500 mt-1">{event.location}</p>
         {response.success && !response.rsvp ? (
           <RSVPButton eventId={eventId} userId={user.id} />
         ) : (

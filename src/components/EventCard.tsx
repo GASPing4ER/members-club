@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { format, parseISO } from "date-fns";
-import { EventProps } from "@/app/(app)/events/page";
+import { TEvent } from "@/app/types";
 
-const EventCard = ({ event }: { event: EventProps }) => {
+const EventCard = ({ event }: { event: TEvent }) => {
   // Parse and format the timestamp
   const formattedDate = event.start_time
     ? format(parseISO(event.start_time), "MMM dd, yyyy h:mm a")

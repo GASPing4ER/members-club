@@ -1,28 +1,9 @@
 "use server";
 
+import { TEventParticipant, TEvent } from "@/app/types";
 import { createSupabaseServerClient } from "@/lib/supabase";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-
-// Define proper types
-type Event = {
-  id: string;
-  user_id: string;
-  title: string;
-  description: string | null;
-  start_time: string;
-  location: string;
-  end_time: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-type EventParticipant = {
-  id: string;
-  event_id: string;
-  user_id: string;
-  created_at: string;
-};
 
 export type ActionState = {
   success?: boolean;
@@ -31,7 +12,7 @@ export type ActionState = {
 };
 
 export type ActionResult =
-  | { success: true; event: Event }
+  | { success: true; event: TEvent }
   | { success: false; error: string };
 
 export async function addEvent(
@@ -94,7 +75,8 @@ export async function rsvpEvent(
   eventId: string,
   userId: string
 ): Promise<
-  { success: true; event: EventParticipant } | { success: false; error: string }
+  | { success: true; event: TEventParticipant }
+  | { success: false; error: string }
 > {
   // Get authenticated user from Clerk
 

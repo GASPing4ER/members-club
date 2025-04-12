@@ -1,4 +1,4 @@
-import { EventProps } from "@/app/(app)/events/page";
+import { TEvent } from "@/app/types";
 import { clerkClient } from "./clerk";
 import { createSupabaseServerClient } from "./supabase";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -13,7 +13,7 @@ export const getUsers = async () => {
 };
 
 export const getEvents = async (): Promise<{
-  data: EventProps[] | null;
+  data: TEvent[] | null;
   error: PostgrestError | null;
   message: string;
 }> => {
@@ -34,7 +34,7 @@ export const getEvents = async (): Promise<{
 export const getParticipatingEvents = async (
   userId: string
 ): Promise<{
-  data: EventProps[] | null;
+  data: TEvent[] | null;
   error: PostgrestError | null;
   message: string;
 }> => {
@@ -62,7 +62,7 @@ export const getParticipatingEvents = async (
     const eventsData =
       (data
         ?.map((item) => item.events)
-        .filter(Boolean) as unknown as EventProps[]) || [];
+        .filter(Boolean) as unknown as TEvent[]) || [];
 
     return {
       data: eventsData,
@@ -84,7 +84,7 @@ export const getParticipatingEvents = async (
 export const getCreatedEvents = async (
   userId: string
 ): Promise<{
-  data: EventProps[] | null;
+  data: TEvent[] | null;
   error: PostgrestError | null;
   message: string;
 }> => {
@@ -108,7 +108,7 @@ export const getCreatedEvents = async (
 export const getEvent = async (
   eventId: string
 ): Promise<{
-  data: EventProps | null;
+  data: TEvent | null;
   error: PostgrestError | null;
   message: string;
 }> => {

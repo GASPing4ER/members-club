@@ -28,11 +28,20 @@ function AddEventForm({ onSuccess }: AddEventFormProps) {
   const [state, formAction] = useActionState<ActionState, FormData>(
     async (prevState: ActionState, formData: FormData) => {
       const result = await addEvent(prevState, formData);
-      if (result.success && onSuccess) {
+
+      if (result.success) {
         onSuccess();
         toast.success("Successfully added a new event.");
+        return {
+          success: true,
+          error: undefined,
+        };
       }
-      return result;
+
+      return {
+        success: false,
+        error: result.error || "Unknown error occurred",
+      };
     },
     initialState
   );

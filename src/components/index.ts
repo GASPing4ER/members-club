@@ -6,6 +6,7 @@ import AddEventForm from "./AddEventForm";
 import EventCard from "./EventCard";
 import RSVPButton from "./RSVPButton";
 import MobileSidebar from "./MobileSidebar";
+import EventsTable from "./EventsTable";
 
 export {
   DashboardHeader,
@@ -16,4 +17,5 @@ export {
   EventCard,
   RSVPButton,
   MobileSidebar,
+  EventsTable,
 };
