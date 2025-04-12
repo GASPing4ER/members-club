@@ -1,6 +1,19 @@
-import { UserData } from "@/components/ProfileForm";
 import { clerkClient } from "@/lib/clerk";
 import Image from "next/image";
+
+export type UserData = {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+  imageUrl: string;
+  emailAddresses: { emailAddress: string }[];
+  publicMetadata: {
+    company?: string;
+    industry?: string;
+    bio?: string;
+  };
+};
+
 const MemberPage = async ({
   params,
 }: {

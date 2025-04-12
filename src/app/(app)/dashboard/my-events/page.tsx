@@ -7,7 +7,6 @@ export default async function MyEventsPage() {
   if (!user) {
     return <div>User not found.</div>;
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [{ data: participatingEvents }, { data: createdEvents }] =
     await Promise.all([
       getParticipatingEvents(user.id),
